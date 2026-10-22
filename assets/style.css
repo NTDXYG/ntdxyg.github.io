@@ -1023,6 +1023,24 @@ html[data-lang="en"] p.en { display: block; }
   .seg-option { transition: none; }
 }
 
+/* ---------- Widget: hitokoto ---------- */
+.quip {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--muted);
+  letter-spacing: .01em;
+  text-align: left;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .quip { display: none; }
+}
+
 /* ---------- Print / CV ---------- */
 @media print {
   @page {

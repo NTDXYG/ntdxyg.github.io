@@ -80,6 +80,7 @@
       langToggle.setAttribute('aria-label', state.lang === 'zh' ? '语言' : 'Language');
     }
     applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light');
+    paintQuip();
   }
 
   if (langToggle) {
@@ -732,6 +733,33 @@
     });
   }, { passive: true });
 
+  /* ---------- Widgets ---------- */
+
+  var quipEl = document.getElementById('quip');
+  var quipText = '';
+
+  function paintQuip() {
+    if (!quipEl) return;
+    var show = !!quipText && state.lang === 'zh';
+    quipEl.hidden = !show;
+    quipEl.textContent = show ? quipText : '';
+  }
+
+  function loadQuip() {
+    if (!quipEl || !window.fetch) return;
+
+    fetch('https://v1.hitokoto.cn/?c=d&c=i&c=k&min_length=12&max_length=16&encode=json', { cache: 'no-store' })
+      .then(function (response) {
+        return response.ok ? response.json() : null;
+      })
+      .then(function (data) {
+        if (!data || !data.hitokoto) return;
+        quipText = '「' + data.hitokoto + '」';
+        paintQuip();
+      })
+      .catch(function () { /* ignore */ });
+  }
+
   /* ---------- Boot ---------- */
 
   function loadJSON(path) {
@@ -769,6 +797,7 @@
   } catch (e) { /* ignore */ }
 
   applyLang(savedLang === 'zh' || savedLang === 'en' ? savedLang : state.lang);
+  loadQuip();
 
   loadSite()
     .then(function (data) {
