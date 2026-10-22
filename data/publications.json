@@ -2,11 +2,11 @@
   "title": { "zh": "代表性成果", "en": "Selected Publications" },
   "note": {
     "zh": "<sup>*</sup> 通讯作者；<span class=\"me\">下划线</span>为第一作者。",
-    "en": "<sup>*</sup> Corresponding author; <span class=\"me\">underlined</span> names indicate first author."
+    "en": "<sup>*</sup> Corresponding author; <span class=\"me\">underlined</span> First author."
   },
   "rank": {
     "label": { "zh": "分区体系", "en": "Ranking system" },
-    "default": "cas",
+    "default": "jcr",
     "systems": [
       { "key": "cas", "label": { "zh": "中科院", "en": "CAS" } },
       { "key": "jcr", "label": { "zh": "JCR", "en": "JCR" } },

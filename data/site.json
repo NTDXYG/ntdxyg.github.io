@@ -1,6 +1,6 @@
 {
   "site": {
-    "defaultLang": "en",
+    "defaultLang": "zh",
     "skipLink": { "zh": "跳到主要内容", "en": "Skip to content" },
     "footer": {
       "copyright": { "zh": "© {year} 杨光 · Guang Yang", "en": "© {year} Guang Yang" },

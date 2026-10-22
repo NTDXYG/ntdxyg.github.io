@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-lang="en" data-theme="light">
+<html lang="zh-CN" data-lang="zh" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +16,7 @@
           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.dataset.theme = theme;
 
-        var lang = localStorage.getItem('lang') || 'en';
+        var lang = localStorage.getItem('lang') || 'zh';
         document.documentElement.dataset.lang = lang;
         document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
       } catch (e) { /* ignore */ }

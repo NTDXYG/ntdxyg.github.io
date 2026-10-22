@@ -2,7 +2,7 @@
   'use strict';
 
   var root = document.documentElement;
-  var state = { data: null, lang: 'en', rank: 'cas' };
+  var state = { data: null, lang: 'zh', rank: null };
 
   var langToggle = document.getElementById('lang-toggle');
   var themeOptions = document.querySelectorAll('.theme-option');
@@ -511,8 +511,21 @@
     return body;
   }
 
+  function resolveRank(section) {
+    var cfg = section.rank || {};
+    var systems = cfg.systems || [];
+    if (!systems.length) return;
+
+    var keys = systems.map(function (system) { return system.key; });
+    if (keys.indexOf(state.rank) !== -1) return;
+
+    state.rank = keys.indexOf(cfg.default) === -1 ? keys[0] : cfg.default;
+  }
+
   function fillPublications(body, section) {
     body.innerHTML = '';
+
+    resolveRank(section);
 
     var buckets = { 1: [], 2: [] };
     var plain = [];
@@ -746,14 +759,24 @@
   }
 
   try {
-    state.rank = localStorage.getItem('rank') || state.rank;
+    var savedRank = localStorage.getItem('rank');
+    if (savedRank) state.rank = savedRank;
   } catch (e) { /* ignore */ }
 
-  applyLang(state.lang = (localStorage.getItem('lang') === 'zh' ? 'zh' : 'en'));
+  var savedLang = null;
+  try {
+    savedLang = localStorage.getItem('lang');
+  } catch (e) { /* ignore */ }
+
+  applyLang(savedLang === 'zh' || savedLang === 'en' ? savedLang : state.lang);
 
   loadSite()
     .then(function (data) {
       state.data = data;
+      if (!savedLang) {
+        var fallback = data.site && data.site.defaultLang;
+        if (fallback === 'zh' || fallback === 'en') state.lang = fallback;
+      }
       applyLang(state.lang);
       render();
     })
