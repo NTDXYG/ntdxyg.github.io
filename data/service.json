@@ -1,0 +1,27 @@
+{
+  "title": { "zh": "学术服务与荣誉", "en": "Service & Awards" },
+  "columns": [
+    {
+      "title": { "zh": "学术服务", "en": "Service" },
+      "items": [
+        { "zh": "期刊审稿：TSE、TOSEM、TIFS 等", "en": "Reviewer: TSE, TOSEM, TIFS" },
+        { "zh": "会议审稿：AAAI、ACL、ICLR 等", "en": "Reviewer: AAAI, ACL, ICLR" }
+      ]
+    },
+    {
+      "title": { "zh": "荣誉", "en": "Awards" },
+      "items": [
+        { "zh": "国家奖学金 ×2（博士、硕士）", "en": "National Scholarship ×2 (Ph.D. and Master's)" },
+        { "zh": "Electronics 最佳博士论文奖", "en": "Electronics Best Ph.D. Thesis Award" }
+      ]
+    },
+    {
+      "title": { "zh": "竞赛", "en": "Competitions" },
+      "items": [
+        { "zh": "中国机器人及人工智能大赛全国一等奖（2020）", "en": "First Prize, Chinese Robot and AI Competition (2020)" },
+        { "zh": "华为杯研究生数学建模竞赛全国二等奖（2020）", "en": "Second Prize, Huawei Cup Mathematical Modeling Contest (2020)" },
+        { "zh": "挑战杯“黑科技”专项竞赛全国三等奖 & 江苏省一等奖（2021）", "en": "Third Prize (National) and First Prize (Jiangsu), Challenge Cup (2021)" }
+      ]
+    }
+  ]
+}

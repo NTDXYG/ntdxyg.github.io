@@ -1,0 +1,51 @@
+{
+  "name": { "zh": "杨光", "en": "Guang Yang" },
+  "role": {
+    "zh": "浙江大学 · 博士后研究员",
+    "en": "Zhejiang University · Postdoctoral Researcher"
+  },
+  "photo": "assets/yg.jpg",
+  "photoAlt": { "zh": "杨光", "en": "Guang Yang" },
+  "metrics": [
+    { "value": "50+", "label": { "zh": "论文", "en": "Papers" } },
+    { "value": "900+", "label": { "zh": "引用", "en": "Citations" } },
+    { "value": "19", "label": { "zh": "H-Index", "en": "H-Index" } }
+  ],
+  "contacts": [
+    {
+      "icon": "scholar",
+      "label": "Google Scholar",
+      "href": "https://scholar.google.com/citations?user=JFoOXQwAAAAJ&hl=en",
+      "external": true
+    },
+    {
+      "icon": "github",
+      "label": "GitHub",
+      "href": "https://github.com/NTDXYG",
+      "external": true
+    },
+    {
+      "icon": "orcid",
+      "label": "ORCID",
+      "href": "https://orcid.org/0000-0002-3374-6680",
+      "external": true
+    },
+    {
+      "icon": "cv",
+      "label": "CV (PDF)",
+      "action": "print-cv"
+    }
+  ],
+  "collaboration": {
+    "title": { "zh": "欢迎合作与交流", "en": "Open to Collaboration" },
+    "text": {
+      "zh": "研究兴趣涵盖代码生成、程序安全与代码评测，欢迎讨论与联合研究。",
+      "en": "My work spans code generation, security and evaluation. Always happy to discuss or collaborate."
+    },
+    "email": "guang_yang@zju.edu.cn"
+  },
+  "meta": {
+    "location": "Hangzhou",
+    "timezone": "Asia/Shanghai"
+  }
+}

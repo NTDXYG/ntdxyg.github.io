@@ -1,0 +1,29 @@
+{
+  "site": {
+    "defaultLang": "en",
+    "skipLink": { "zh": "跳到主要内容", "en": "Skip to content" },
+    "footer": {
+      "copyright": { "zh": "© {year} 杨光 · Guang Yang", "en": "© {year} Guang Yang" },
+      "updated": { "zh": "最近更新：2026 年 10 月", "en": "Last updated: October 2026" }
+    }
+  },
+  "profile": "data/profile.json",
+  "nav": [
+    { "href": "#research", "label": { "zh": "研究兴趣", "en": "Research" } },
+    { "href": "#experience", "label": { "zh": "教育与工作经历", "en": "Experience" } },
+    { "href": "#projects", "label": { "zh": "科研项目", "en": "Projects" } },
+    { "href": "#publications", "label": { "zh": "代表性成果", "en": "Publications" } },
+    { "href": "#service", "label": { "zh": "学术服务与荣誉", "en": "Service" } }
+  ],
+  "intro": {
+    "zh": "研究聚焦人工智能与软件工程的交叉，围绕程序理解、程序生成与程序安全，探索面向软件与硬件的大模型代码智能。",
+    "en": "My research sits at the intersection of AI and software engineering, spanning program comprehension, program generation and program security for both software and hardware."
+  },
+  "sections": [
+    { "id": "research", "type": "interests", "file": "data/research.json" },
+    { "id": "experience", "type": "timeline", "file": "data/experience.json" },
+    { "id": "projects", "type": "projects", "file": "data/projects.json" },
+    { "id": "publications", "type": "publications", "file": "data/publications.json" },
+    { "id": "service", "type": "service", "file": "data/service.json" }
+  ]
+}
