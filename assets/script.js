@@ -817,7 +817,13 @@
       bucketKeys(buckets).forEach(function (bucket) {
         if (!buckets[bucket].length) return;
 
-        body.appendChild(el('h3', { class: 'group', text: bucketLabel(section, bucket) }));
+        var heading = el('h3', { class: 'group' });
+        heading.appendChild(document.createTextNode(bucketLabel(section, bucket)));
+        heading.appendChild(el('span', {
+          class: 'print-only',
+          text: ' · ' + buckets[bucket].length + (state.lang === 'zh' ? ' 篇' : (buckets[bucket].length === 1 ? ' paper' : ' papers'))
+        }));
+        body.appendChild(heading);
         body.appendChild(pubList(section, buckets[bucket]));
       });
 
