@@ -1,8 +1,20 @@
 /* ============================================================
-   Guang Yang — academic homepage
-   Plain CSS, no frameworks, no external dependencies.
+   主页即简历。一份样式同时管屏幕和 PDF。
+
+   屏幕上的颜色、字体、版心都集中在下面的 :root。
+   深色模式只覆盖同名变量，见 [data-theme="dark"]。
+   简历不另做模板：文件末尾的 @media print 在打印时把同一页面排成 A4。
+   换内容改 data/，不用改这个文件。
    ============================================================ */
 
+/*
+  想改外观，优先改这些变量：
+    --paper / --ink / --muted   背景、正文、次要文字
+    --link                      链接
+    --serif / --sans            衬线（标题）与无衬线（正文）
+    --max                       版心宽度
+  打印用的强调色 --accent 不在这里，定义在 @media print 内。
+*/
 :root {
   --paper: #ffffff;
   --ink: #16181d;
@@ -86,48 +98,67 @@ p { text-wrap: pretty; }
   outline-offset: 3px;
 }
 
-.wrap {
-  width: min(100% - 48px, var(--max));
-  margin-inline: auto;
+/*
+  版心用 layui-container。大屏上组件自己会放到 1150 / 1330，
+  这里用 --max 封顶，简历的行宽保持原来的阅读宽度。
+  列间距来自 layui-col-space32（左右各 16px）。负外边距会把
+  最外侧拉回容器边缘，所以只消掉上下的那一截。
+*/
+.layui-container { max-width: var(--max); }
+
+.layout.layui-col-space32,
+.topbar-inner.layui-col-space32 {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.skip-link {
-  position: absolute;
-  top: -60px;
-  left: 16px;
-  z-index: 10;
-  padding: 8px 14px;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 13px;
+.layout.layui-col-space32 > *,
+.topbar-inner.layui-col-space32 > * {
+  padding-top: 0;
+  padding-bottom: 0;
 }
-
-.skip-link:focus { top: 8px; }
 
 /* ---------- Layout ---------- */
-.layout {
-  display: grid;
-  grid-template-columns: 236px minmax(0, 1fr);
-  gap: 48px;
-  padding-top: 34px;
-}
+.layout { padding-top: 34px; }
 
 .sidebar {
   position: sticky;
   top: 62px;
   align-self: start;
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  column-gap: 14px;
+  align-items: start;
 }
 
+/* 屏幕上拆开，子项仍参加侧栏网格。打印时收成姓名旁边的一块。 */
+.side-main { display: contents; }
+
 .portrait {
-  width: 128px;
+  grid-column: 1;
+  grid-row: 1;
+  width: 108px;
   height: auto;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: 32% center;
   border: 1px solid var(--rule-soft);
+  border-radius: 12px;
+  align-self: center;
 }
 
-.identity { margin-top: 20px; }
+.identity {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  margin-top: 0;
+  align-self: center;
+}
+
+.metrics,
+.side-contact,
+.side-block,
+.side-meta { grid-column: 1 / -1; }
 
 .identity h1 {
   margin: 0;
@@ -148,11 +179,15 @@ p { text-wrap: pretty; }
 }
 
 .role {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   font-size: 13px;
-  line-height: 1.7;
+  line-height: 1.45;
   color: var(--muted);
 }
+
+.role-line { display: block; }
+
+.role-line + .role-line { margin-top: 1px; }
 
 .metrics {
   display: grid;
@@ -201,10 +236,12 @@ p { text-wrap: pretty; }
   background: none;
   color: var(--muted);
   font: inherit;
+  line-height: 1;
   cursor: pointer;
 }
 
 .side-contact svg {
+  display: block;
   flex-shrink: 0;
   width: 14px;
   height: 14px;
@@ -214,7 +251,6 @@ p { text-wrap: pretty; }
   stroke-linecap: round;
   stroke-linejoin: round;
   color: var(--faint);
-  transform: translateY(-.5px);
 }
 
 .side-contact a:hover,
@@ -277,9 +313,29 @@ p { text-wrap: pretty; }
 }
 
 .card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11.8px;
-  word-break: break-all;
+  line-height: 1;
 }
+
+.card-link span { word-break: break-all; }
+
+.card-link svg {
+  display: block;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--faint);
+}
+
+.card-link:hover svg { color: var(--ink); }
 
 .side-meta {
   display: flex;
@@ -318,28 +374,26 @@ p { text-wrap: pretty; }
   background: var(--paper);
 }
 
-.topbar-inner {
-  display: grid;
-  grid-template-columns: 236px minmax(0, 1fr);
-  gap: 48px;
+.topbar-quip,
+.topbar-main {
+  display: flex;
   align-items: center;
   min-height: 46px;
 }
 
+.topbar-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  width: 100%;
+}
+
 .content-nav {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: start;
   display: flex;
   flex-wrap: wrap;
   gap: 4px 22px;
   font-size: 12.8px;
-}
-
-.controls {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: end;
 }
 
 .content-nav a {
@@ -382,17 +436,16 @@ p { text-wrap: pretty; }
   font-size: 12.5px;
 }
 
-html[data-lang="zh"] [data-lang-only="en"],
-html[data-lang="en"] [data-lang-only="zh"] { display: none; }
-
 /* language: native select */
-.lang-select {
+.lang-select,
+.ccf-select {
   position: relative;
   display: inline-flex;
   align-items: center;
 }
 
-.lang-select select {
+.lang-select select,
+.ccf-select select {
   appearance: none;
   -webkit-appearance: none;
   padding: 3px 19px 3px 9px;
@@ -402,12 +455,24 @@ html[data-lang="en"] [data-lang-only="zh"] { display: none; }
   color: var(--muted);
   font: inherit;
   font-size: 12.5px;
+  line-height: 1.5;
+  white-space: nowrap;
   cursor: pointer;
 }
 
-.lang-select select:hover { color: var(--ink); }
+.ccf-select select {
+  min-width: 82px;
+  padding: 4px 22px 4px 10px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+  font-size: 11.5px;
+  line-height: 1.6;
+}
 
-.lang-select select:focus-visible { outline-offset: 1px; }
+.lang-select select:hover,
+.ccf-select select:hover { color: var(--ink); }
+
+.lang-select select:focus-visible,
+.ccf-select select:focus-visible { outline-offset: 1px; }
 
 .lang-caret {
   position: absolute;
@@ -418,7 +483,8 @@ html[data-lang="en"] [data-lang-only="zh"] { display: none; }
   pointer-events: none;
 }
 
-.lang-select select option {
+.lang-select select option,
+.ccf-select select option {
   background: var(--paper);
   color: var(--ink);
 }
@@ -483,19 +549,6 @@ html[data-lang="en"] [data-lang-only="zh"] { display: none; }
   line-height: 1.75;
   color: var(--muted);
 }
-
-.load-error code {
-  font-size: 12px;
-  color: var(--ink);
-}
-
-.zh, .en { display: none; }
-
-html[data-lang="zh"] .zh { display: inline; }
-html[data-lang="en"] .en { display: inline; }
-
-html[data-lang="zh"] p.zh { display: block; }
-html[data-lang="en"] p.en { display: block; }
 
 /* ---------- Content sections ---------- */
 .content { min-width: 0; }
@@ -671,6 +724,7 @@ html[data-lang="en"] p.en { display: block; }
   color: var(--muted);
 }
 
+/* 屏幕上隐藏。打印时显示，用来标出本次简历采用的分区体系。 */
 .print-only { display: none; }
 
 .pub-bar {
@@ -683,6 +737,13 @@ html[data-lang="en"] p.en { display: block; }
 }
 
 .pub-bar .note { margin-bottom: 0; }
+
+.pub-switches {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
 
 .seg {
   --seg-count: 2;
@@ -740,6 +801,7 @@ html[data-lang="en"] p.en { display: block; }
 
 .pub-bar + .group { margin-top: 0; }
 
+/* 论文序号 [1] [2] … 由计数器生成，跨分组连续，JSON 里不要手写编号。 */
 #publications .section-body { counter-reset: pub; }
 
 .pubs {
@@ -827,6 +889,9 @@ html[data-lang="en"] p.en { display: block; }
   color: var(--muted);
 }
 
+/* layui.css 会把 li 的列表符号清掉，学术服务这一列要留圆点。 */
+.service-cols li { list-style: disc; }
+
 .service-cols li + li { margin-top: 2px; }
 
 .service-cols strong {
@@ -853,12 +918,20 @@ html[data-lang="en"] p.en { display: block; }
 
 .footer-inner p { margin: 0; }
 
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    padding-top: 28px;
+@media (max-width: 991.98px) {
+  .topbar-inner.layui-col-space32,
+  .layout.layui-col-space32 {
+    margin: 0;
   }
+
+  .topbar-inner.layui-col-space32 > *,
+  .layout.layui-col-space32 > * {
+    padding: 0;
+  }
+
+  .topbar-quip { display: none; }
+
+  .layout { padding-top: 28px; }
 
   .sidebar {
     position: static;
@@ -866,6 +939,7 @@ html[data-lang="en"] p.en { display: block; }
     grid-template-columns: minmax(0, 1fr) 96px;
     column-gap: 20px;
     align-items: start;
+    margin-bottom: 30px;
     padding-bottom: 24px;
     border-bottom: 1px solid var(--rule);
   }
@@ -874,12 +948,14 @@ html[data-lang="en"] p.en { display: block; }
     grid-column: 2;
     grid-row: 1;
     width: 96px;
+    align-self: start;
   }
 
   .identity {
     grid-column: 1;
     grid-row: 1;
     margin-top: 0;
+    align-self: start;
   }
 
   .latin { margin-top: 4px; }
@@ -919,11 +995,10 @@ html[data-lang="en"] p.en { display: block; }
     font-size: 12px;
   }
 
-  .topbar-inner {
-    display: flex;
+  .topbar-main { min-height: 42px; }
+
+  .topbar-tools {
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 4px 16px;
     min-height: 42px;
   }
 
@@ -969,10 +1044,18 @@ html[data-lang="en"] p.en { display: block; }
   }
 }
 
-@media (max-width: 460px) {
-  .wrap { width: calc(100% - 36px); }
+@media (max-width: 767.98px) {
+  .layui-container {
+    width: min(100% - 48px, var(--max));
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 
-  .layout { gap: 24px; }
+@media (max-width: 460px) {
+  .layui-container { width: calc(100% - 36px); }
+
+  .sidebar { margin-bottom: 24px; }
 
   .sidebar {
     grid-template-columns: minmax(0, 1fr) 82px;
@@ -1025,9 +1108,8 @@ html[data-lang="en"] p.en { display: block; }
 
 /* ---------- Widget: hitokoto ---------- */
 .quip {
-  grid-column: 1;
-  grid-row: 1;
   margin: 0;
+  overflow: hidden;
   font-family: var(--serif);
   font-size: 12.5px;
   line-height: 1.4;
@@ -1035,13 +1117,20 @@ html[data-lang="en"] p.en { display: block; }
   letter-spacing: .01em;
   text-align: left;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-@media (max-width: 900px) {
-  .quip { display: none; }
-}
+/* ---------- Print / CV ----------
+   侧栏「CV (PDF)」只是 window.print()。真正的简历版式是这一段。
 
-/* ---------- Print / CV ---------- */
+   打印前，脚本已经按当前语言和当前分区把 DOM 填好。
+   这里只做三件事：收成 A4、藏掉不该出现在简历上的控件、把头像和正文排紧。
+   被藏掉的包括顶栏、语言/主题、分区切换、本地时间、页脚和导出按钮本身。
+   .print-only 反过来，只在纸上显示「分区体系：…」。
+
+   颜色在打印时强制白底黑字，深色模式不会被印出去。
+   --accent 是简历里姓名、档位、序号用的深蓝色。
+*/
 @media print {
   @page {
     size: A4 portrait;
@@ -1072,9 +1161,10 @@ html[data-lang="en"] p.en { display: block; }
     -webkit-print-color-adjust: exact;
   }
 
-  .skip-link,
   .topbar,
   .site-footer,
+  .pub-switches,
+  .ccf-select,
   .seg-rank,
   .side-meta,
   .load-error,
@@ -1082,73 +1172,98 @@ html[data-lang="en"] p.en { display: block; }
 
   .print-only { display: inline; }
 
-  .wrap {
-    width: auto;
+  .layui-container {
+    width: auto !important;
     max-width: 158mm;
     margin: 0 auto;
+    padding: 0 !important;
   }
 
   .layout {
     display: block;
+    margin: 0 !important;
     padding: 0;
-    gap: 0;
+  }
+
+  .layout > .sidebar,
+  .layout > .content {
+    float: none !important;
+    width: auto !important;
+    padding: 0 !important;
+    margin: 0;
   }
 
   .sidebar {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 74pt;
-    grid-template-areas:
-      "identity photo"
-      "metrics photo"
-      "contact photo"
-      "email photo";
-    column-gap: 13pt;
-    align-items: start;
+    display: flex;
+    align-items: center;
+    gap: 12pt;
     position: static;
-    margin: 0 0 9pt;
-    padding: 0 0 7pt;
-    border-bottom: 1.6pt solid var(--accent);
+    margin: 0 0 8pt;
+    padding: 0 0 6pt;
+    border-bottom: .8pt solid var(--accent);
   }
 
+  .side-main {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    column-gap: 11pt;
+    row-gap: 2.6pt;
+    min-width: 0;
+    order: 1;
+  }
+
+  .identity,
+  .metrics { flex: 1 0 100%; }
+
   .portrait {
-    grid-area: photo;
-    width: 74pt;
-    height: 92pt;
+    order: 0;
+    flex: none;
+    width: 62pt;
+    height: 76pt;
     aspect-ratio: auto;
     object-fit: cover;
-    object-position: 32% center;
-    border: .5pt solid #c9c9c9;
-    border-radius: 2pt;
-    align-self: start;
+    object-position: center center;
+    border: .4pt solid #c5c5c5;
+    border-radius: 1.5pt;
+    align-self: center;
   }
 
   .identity {
-    grid-area: identity;
     display: block;
     margin: 0;
+    align-self: start;
   }
 
   .identity h1 {
     margin: 0;
-    font-size: 19pt;
-    line-height: 1.15;
-    letter-spacing: .01em;
+    font-size: 16.5pt;
+    line-height: 1.12;
+    letter-spacing: .02em;
     color: var(--accent);
   }
 
   .identity .role {
-    margin: 2.5pt 0 0;
+    margin: 1.6pt 0 0;
     font-size: 9pt;
-    line-height: 1.4;
+    line-height: 1.35;
     color: var(--muted);
   }
 
+  .identity .role-line { display: inline; }
+
+  .identity .role-line + .role-line::before {
+    content: " · ";
+    color: var(--faint);
+  }
+
   .metrics {
-    grid-area: metrics;
     display: flex;
     flex-wrap: wrap;
-    gap: 1pt 14pt;
-    margin: 5pt 0 0;
+    gap: 1pt 13pt;
+    margin: 0;
     padding: 0;
     border: 0;
     break-inside: avoid;
@@ -1164,13 +1279,13 @@ html[data-lang="en"] p.en { display: block; }
   }
 
   .side-contact {
-    grid-area: contact;
     display: flex;
     flex-wrap: wrap;
-    gap: 0 11pt;
-    margin: 4pt 0 0;
+    align-items: center;
+    gap: 1pt 11pt;
+    margin: 0;
     font-size: 7.8pt;
-    line-height: 1.5;
+    line-height: 1.4;
   }
 
   .side-contact li { display: block; }
@@ -1185,9 +1300,9 @@ html[data-lang="en"] p.en { display: block; }
 
   .side-contact a { gap: 3pt; color: var(--muted); }
 
+  /* 合作卡片在简历里只留邮箱，标题和说明留给主页。 */
   .side-card {
-    grid-area: email;
-    margin: 3pt 0 0;
+    margin: 0;
     padding: 0;
     border: 0;
     background: none;
@@ -1198,41 +1313,18 @@ html[data-lang="en"] p.en { display: block; }
   .side-card .card-text { display: none; }
 
   .side-card .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 3pt;
     font-size: 7.8pt;
     color: var(--muted);
   }
 
-  .side-card {
-    grid-area: email;
-    margin: 3pt 0 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    break-inside: avoid;
-  }
-
-  .side-card .card-title,
-  .side-card .card-text { display: none; }
-
-  .side-card .card-link {
-    font-size: 7.8pt;
-    color: var(--muted);
-  }
-
-  .side-card {
-    grid-area: email;
-    margin: 3pt 0 0;
-    padding: 0;
-    border: 0;
-    break-inside: avoid;
-  }
-
-  .side-card .card-title,
-  .side-card .card-text { display: none; }
-
-  .side-card .card-link {
-    font-size: 7.8pt;
-    color: var(--muted);
+  .side-card .card-link svg {
+    width: 7.2pt;
+    height: 7.2pt;
+    stroke-width: 1.7;
+    color: var(--accent);
   }
 
   .lede {
@@ -1283,6 +1375,8 @@ html[data-lang="en"] p.en { display: block; }
     page-break-inside: avoid;
   }
 
+  .row + .row { border-top: 0; }
+
   .when {
     position: absolute;
     left: 0;
@@ -1292,7 +1386,43 @@ html[data-lang="en"] p.en { display: block; }
     white-space: nowrap;
   }
   .primary { font-size: 8.4pt; line-height: 1.4; }
-  .advisor, .project-meta { font-size: 7.6pt; }
+
+  #experience .what {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1pt 8pt;
+  }
+
+  .advisor {
+    flex: 0 0 auto;
+    margin: 0 0 0 auto;
+    font-size: 7.6pt;
+    line-height: 1.4;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .project-meta {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1pt 8pt;
+    margin: .4pt 0 0;
+    font-size: 7.6pt;
+    line-height: 1.4;
+  }
+
+  .amount {
+    flex: 0 0 auto;
+    margin-left: auto;
+    text-align: right;
+    white-space: nowrap;
+  }
 
   .note {
     margin: 0 0 3pt;
